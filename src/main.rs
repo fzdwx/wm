@@ -55,7 +55,7 @@ fn raw_key_bindings() -> HashMap<String, Box<dyn KeyEventHandler<RustConn>>> {
         "M-Down" => send_layout_message(|| IncMain(-1)),
         "M-Right" => send_layout_message(|| ExpandMain),
         "M-Left" => send_layout_message(|| ShrinkMain),
-        "M-semicolon" => spawn("dmenu_run"),
+        "A-space" => spawn("rofi -show window  -icon-theme Papirus -show-icons"),
         "M-S-s" => log_current_state(),
         "M-Return" => spawn("wezterm"),
         "M-A-Escape" => exit(),
@@ -112,12 +112,8 @@ fn main() -> Result<()> {
 
     let bar = status_bar(BAR_HEIGHT_PX, &style, BLUE, GREY, Position::Top).unwrap();
 
-    let wm = bar.add_to(WindowManager::new(
-        config,
-        key_bindings,
-        HashMap::new(),
-        conn,
-    )?);
+    let mut wm = WindowManager::new(config, key_bindings, HashMap::new(), conn)?;
+    wm = bar.add_to(wm);
 
     wm.run()
 }
